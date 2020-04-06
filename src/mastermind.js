@@ -2,8 +2,8 @@ export const compareCodeToGuess = (code, guess) => {
 	let correctPlace = 0;
 	let correctColor = 0;
 
-	let foundColors = [];
-	let remainingGuessed = [];
+	const foundColors = [];
+	const remainingGuessed = [];
 
 	code.forEach((val, idx) => {
 		if (val === guess[idx]) {
@@ -23,7 +23,7 @@ export const compareCodeToGuess = (code, guess) => {
 	})
 
 	return {
-		black: correctPlace,
-		white: correctColor
+		correct: correctPlace,
+		wrongPlacement: correctColor
 	}
 }

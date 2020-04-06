@@ -17,17 +17,15 @@
 </template>
 
 <script>
-import {compareCodeToGuess} from '../mastermind';
+import { compareCodeToGuess } from '../mastermind';
 
 import GuessRow from './GuessRow';
-import PinInput from './PinInput';
 import CodeInput from './CodeInput';
 
 export default {
 	components: {
 		GuessRow,
 		CodeInput,
-		PinInput
 	},
 	props: {
 		code: {
@@ -45,9 +43,9 @@ export default {
 	methods: {
 		evaluateAndAddGuess(guess) {
 			this.guesses.push([...guess]);
-			const evaluation = compareCodeToGuess(this.code, guess);
-			console.log({guess, evaluation});
-			this.guessEvaluations.push(evaluation);
+			const { correct, wrongPlacement } = compareCodeToGuess(this.code, guess);
+			console.log({ guess, correct, wrongPlacement });
+			this.guessEvaluations.push({ black: correct, white: wrongPlacement });
 		},
 	}
 }
