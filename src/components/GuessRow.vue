@@ -4,8 +4,8 @@
 		<div class="guess">
 			<div
 				class="pin guess-pin"
-				v-for="pinColor in colors"
-				:key="pinColor"
+				v-for="(pinColor, idx) in colors"
+				:key="idx + '-' + pinColor"
 				:style="{ background: pinColor }"
 			></div>
 		</div>
@@ -14,13 +14,13 @@
 				class="pin eval-pin"
 				:style="{ background: 'black' }"
 				v-for="n in evaluation.black"
-				:key="n"
+				:key="n + '-black'"
 			></div>
 			<div
 				class="pin eval-pin"
 				:style="{ background: 'white' }"
 				v-for="n in evaluation.white"
-				:key="n"
+				:key="n + '-white'"
 			></div>
 		</div>
 	</div>
