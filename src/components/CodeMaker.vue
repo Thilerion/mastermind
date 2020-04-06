@@ -1,6 +1,7 @@
 <template>
 	<div>
-		<CodeInput @finish="(code) => startGame(code)" />
+		<button @click="randomCode">Willekeurige code</button>
+		<CodeInput @finish="startGame" />
 	</div>
 </template>
 
@@ -18,6 +19,9 @@ export default {
 	methods: {
 		startGame(code) {
 			this.$emit('start', [...code]);
+		},
+		randomCode() {
+			this.$emit('start-random');
 		}
 	}
 }
