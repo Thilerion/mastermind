@@ -1,4 +1,4 @@
-import { compareCodeToGuess } from '../../src/mastermind';
+import { compareCodeToGuess, createSecretCode } from '../../src/mastermind';
 
 describe('compareCodeToGuess', () => {
 	it('returns the correct number of white and black', () => {
@@ -25,5 +25,33 @@ describe('compareCodeToGuess', () => {
 			correct: 0,
 			wrongPlacement: 4
 		});
+	})
+})
+
+describe('createSecretCode', () => {
+	const pinTypes = [0, 1, 2, 3, 4, 5];
+	beforeAll(() => {
+		jest.spyOn(Math, 'random').mockReturnValue(0.99);
+	})
+	afterAll(() => {
+		jest.restoreAllMocks();
+	})
+	afterEach(() => {
+		jest.clearAllMocks();
+	})
+
+	it('returns a code with the correct length', () => {
+		expect(createSecretCode(pinTypes, 4)).toHaveLength(4);
+		expect(createSecretCode(pinTypes, 6)).toHaveLength(6);
+	})
+
+	it('returns a code with random pins', () => {
+		let code = createSecretCode(pinTypes, 4);
+		expect(Math.random).toHaveBeenCalledTimes(4);
+		expect(code).toEqual([5, 5, 5, 5]);
+
+		Math.random.mockReturnValueOnce(0).mockReturnValueOnce(0.17).mockReturnValueOnce(0.34);
+		code = createSecretCode(pinTypes, 4);
+		expect(code).toEqual([0, 1, 2, 5]);
 	})
 })
