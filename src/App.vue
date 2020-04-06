@@ -5,7 +5,7 @@
 		<CodeBreaker
 			:code="code"
 			@reset="resetGame"
-			v-else 
+			v-else
 		/>
 	</div>
 </template>

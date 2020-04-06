@@ -2,11 +2,26 @@
 	<div class="guess-row">
 		<div class="row-num">{{row}}</div>
 		<div class="guess">
-			<div class="pin guess-pin" v-for="pinColor in colors" :style="{background: pinColor}"></div>
+			<div
+				class="pin guess-pin"
+				v-for="pinColor in colors"
+				:key="pinColor"
+				:style="{ background: pinColor }"
+			></div>
 		</div>
 		<div class="correct-pins">
-			<div class="pin eval-pin" :style="{background: 'black'}" v-for="n in evaluation.black"></div>
-			<div class="pin eval-pin" :style="{background: 'white'}" v-for="n in evaluation.white"></div>
+			<div
+				class="pin eval-pin"
+				:style="{ background: 'black' }"
+				v-for="n in evaluation.black"
+				:key="n"
+			></div>
+			<div
+				class="pin eval-pin"
+				:style="{ background: 'white' }"
+				v-for="n in evaluation.white"
+				:key="n"
+			></div>
 		</div>
 	</div>
 </template>

@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import {PIN_TYPES} from '../constants';
+import { PIN_TYPES } from '../constants';
 import PinInput from './PinInput';
 
 export default {

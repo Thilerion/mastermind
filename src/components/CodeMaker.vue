@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<CodeInput @finish="(code) => startGame(code)" />		
+		<CodeInput @finish="(code) => startGame(code)" />
 	</div>
 </template>
 
