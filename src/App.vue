@@ -2,12 +2,11 @@
 	<div id="app">
 		<h1>Mastermind</h1>
 		<CodeMaker
-			v-if="!codeSet"
+			v-if="!gameStarted"
 			@start="startGame"
 			@start-random="createRandomCode"
 		/>
 		<CodeBreaker
-			:code="code"
 			@reset="resetGame"
 			v-else
 		/>
@@ -17,8 +16,6 @@
 <script>
 import CodeMaker from './components/CodeMaker';
 import CodeBreaker from './components/CodeBreaker';
-import { createSecretCode } from './mastermind';
-import { PIN_TYPES } from './constants';
 
 export default {
 	name: 'App',
@@ -26,26 +23,20 @@ export default {
 		CodeMaker,
 		CodeBreaker
 	},
-	data() {
-		return {
-			code: null,
-			codeLength: 4
-		}
-	},
 	computed: {
-		codeSet() {
-			return this.code != null;
+		gameStarted() {
+			return this.$store.getters.gameStarted;
 		}
 	},
 	methods: {
 		startGame(code) {
-			this.code = code;
+			this.$store.commit('setSecretCode', code);
 		},
 		resetGame() {
-			this.code = null;
+			this.$store.dispatch('resetGame');
 		},
 		createRandomCode() {
-			this.code = createSecretCode(Object.values(PIN_TYPES), this.codeLength);
+			this.$store.dispatch('createRandomCode');
 		}
 	}
 }

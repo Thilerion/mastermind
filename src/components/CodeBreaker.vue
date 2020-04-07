@@ -7,7 +7,7 @@
 				:key="guess.join('') + '-' + idx"
 				:guess="guess"
 				:row="idx + 1"
-				:evaluation="guessEvaluations[idx]"
+				:evaluation="evaluations[idx]"
 			/>
 		</div>
 		<div class="create-guess">
@@ -17,8 +17,6 @@
 </template>
 
 <script>
-import { compareCodeToGuess } from '../mastermind';
-
 import GuessRow from './GuessRow';
 import CodeInput from './CodeInput';
 
@@ -27,25 +25,24 @@ export default {
 		GuessRow,
 		CodeInput,
 	},
-	props: {
-		code: {
-			type: Array,
-			required: true
-		}
-	},
-	data() {
-		return {
-			maxGuesses: 10,
-			guesses: [],
-			guessEvaluations: []
+	computed: {
+		config() {
+			return this.$store.state.config;
+		},
+		code() {
+			return this.$store.state.game.code;
+		},
+		guesses() {
+			return this.$store.state.game.guesses;
+		},
+		evaluations() {
+			return this.$store.state.game.evaluations;
 		}
 	},
 	methods: {
 		evaluateAndAddGuess(guess) {
-			this.guesses.push([...guess]);
-			const { correct, wrongPlacement } = compareCodeToGuess(this.code, guess);
-			console.log({ guess, correct, wrongPlacement });
-			this.guessEvaluations.push({ black: correct, white: wrongPlacement });
+			this.$store.dispatch('makeGuess', guess);
+			this.$store.dispatch('evaluateGuess');
 		},
 	}
 }
