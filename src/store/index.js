@@ -34,7 +34,7 @@ const store = new Vuex.Store({
 			return emptyIdx < 0 ? null : emptyIdx;
 		},
 		curGuessIsFull: state => state.game.currentGuess.length === state.config.codeLength,
-		canAddPinToCurGuess: (state, getters) => !getters.curGuessIsFull || getters.curGuessEmptySpace,
+		canAddPinToCurGuess: (state, getters) => !getters.curGuessIsFull || getters.curGuessEmptySpace != null,
 		curGuessIsComplete: (state, getters) => !getters.canAddPinToCurGuess,
 	},
 
@@ -68,12 +68,24 @@ const store = new Vuex.Store({
 				return;
 			}
 			const curGuess = [...state.game.currentGuess];
-			if (getters.curGuessEmptySpace) {
+			if (getters.curGuessEmptySpace != null) {
 				console.log('Adding pin to empty space');
 				curGuess.splice(getters.curGuessEmptySpace, 1, pinId);
 			} else {
 				console.log('Adding pin at the end of array');
 				curGuess.push(pinId);
+			}
+			commit('setCurrentGuess', curGuess);
+		},
+		removePinFromCurrentGuess({ state, commit }, idx) {
+			const curGuess = [...state.game.currentGuess];
+			if (idx >= curGuess.length) {
+				console.warn('Cannot remove pin that has not been placed');
+				return;
+			} else if (idx + 1 === curGuess.length) {
+				curGuess.pop();
+			} else {
+				curGuess.splice(idx, 1, null);
 			}
 			commit('setCurrentGuess', curGuess);
 		},

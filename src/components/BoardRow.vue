@@ -14,6 +14,7 @@
 					v-if="guess[idx] != null"
 					:removable="isCurrentGuess"
 					:color="pins[guess[idx]].color"
+					@click="removePin(idx)"
 				/>
 			</div>
 		</div>
@@ -76,6 +77,7 @@ export default {
 	methods: {
 		removePin(idx) {
 			console.log('Remove pin at idx: ', idx);
+			this.$store.dispatch('removePinFromCurrentGuess', idx);
 		}
 	}
 }

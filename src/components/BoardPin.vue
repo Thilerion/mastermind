@@ -3,6 +3,7 @@
 		:is="componentType"
 		class="board-pin"
 		:style="{ '--pin-color': color }"
+		@[hasClickEvent]="$emit('click')"
 	></component>
 </template>
 
@@ -18,6 +19,9 @@ export default {
 	computed: {
 		componentType() {
 			return this.removable ? 'button' : 'div';
+		},
+		hasClickEvent() {
+			return this.removable ? 'click' : null;
 		}
 	}
 };
