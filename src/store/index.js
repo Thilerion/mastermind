@@ -9,7 +9,8 @@ Vue.use(Vuex);
 const createNewGame = () => ({
 	code: null,
 	guesses: [],
-	evaluations: []
+	evaluations: [],
+	currentGuess: []
 });
 
 const store = new Vuex.Store({
@@ -20,13 +21,20 @@ const store = new Vuex.Store({
 			maxGuesses: 10,
 			pins: PINS,
 			pinTypes: PIN_TYPES
-		}
+		},
 	},
 
 	getters: {
 		gameStarted: state => state.game.code != null,
 		pinIds: state => Object.values(state.config.pinTypes),
 		numGuesses: state => state.game.guesses.length,
+
+		curGuessEmptySpace: state => {
+			const emptyIdx = state.game.currentGuess.findIndex(val => val == null);
+			return emptyIdx < 0 ? null : emptyIdx;
+		},
+		curGuessIsFull: state => state.game.currentGuess.length === state.config.codeLength,
+		canAddPinToCurGuess: (state, getters) => !getters.curGuessIsFull || getters.curGuessEmptySpace,
 	},
 
 	mutations: {
@@ -34,9 +42,13 @@ const store = new Vuex.Store({
 		setSecretCode: (state, code) => state.game.code = code,
 		addGuess: (state, guess) => state.game.guesses.push(guess),
 		addGuessEvaluation: (state, evaluation) => state.game.evaluations.push(evaluation),
+		setCurrentGuess: (state, curGuess) => state.game.currentGuess = curGuess,
 	},
 
 	actions: {
+		startGameWithCode({ commit }, code) {
+			commit('setSecretCode', [...code]);
+		},
 		resetGame({ commit }) {
 			const newGameState = createNewGame();
 			commit('setGameState', newGameState);
@@ -47,10 +59,34 @@ const store = new Vuex.Store({
 		},
 		makeGuess({ commit }, guess) {
 			commit('addGuess', [...guess]);
+			commit('setCurrentGuess', []);
 		},
-		evaluateGuess({ state, getters, commit }) {
-			const lastGuess = state.game.guesses[getters.numGuesses - 1];
-			const { correct, wrongPlacement } = compareCodeToGuess(this.state.game.code, lastGuess);
+		addPinToCurrentGuess({ state, getters, commit }, pinId) {
+			if (!getters.canAddPinToCurGuess) {
+				console.warn("Not allowed to add to current guess.");
+				return;
+			}
+			const curGuess = [...state.game.currentGuess];
+			if (getters.curGuessEmptySpace) {
+				console.log('Adding pin to empty space');
+				curGuess.splice(getters.curGuessEmptySpace, 1, pinId);
+			} else {
+				console.log('Adding pin at the end of array');
+				curGuess.push(pinId);
+			}
+			commit('setCurrentGuess', curGuess);
+		},
+		finalizeCurrentGuess({ state, getters, dispatch }) {
+			if (getters.canAddPinToCurGuess) {
+				console.warn('Current guess is incomplete');
+				return;
+			}
+			const curGuess = state.game.currentGuess;
+			dispatch('makeGuess', curGuess);
+			dispatch('evaluateGuess', curGuess);
+		},
+		evaluateGuess({ commit }, guess) {
+			const { correct, wrongPlacement } = compareCodeToGuess(this.state.game.code, guess);
 			commit('addGuessEvaluation', { black: correct, white: wrongPlacement });
 		}
 	}

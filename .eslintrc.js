@@ -18,7 +18,8 @@ module.exports = {
 		semi: 0,
 		'eol-last': 0,
 		'space-before-function-paren': ['warn', 'never'],
-		'comma-dangle': 0
+		'comma-dangle': 0,
+		'quotes': 0
 	},
 	overrides: [
 		{
