@@ -35,6 +35,7 @@ const store = new Vuex.Store({
 		},
 		curGuessIsFull: state => state.game.currentGuess.length === state.config.codeLength,
 		canAddPinToCurGuess: (state, getters) => !getters.curGuessIsFull || getters.curGuessEmptySpace,
+		curGuessIsComplete: (state, getters) => !getters.canAddPinToCurGuess,
 	},
 
 	mutations: {
@@ -77,7 +78,7 @@ const store = new Vuex.Store({
 			commit('setCurrentGuess', curGuess);
 		},
 		finalizeCurrentGuess({ state, getters, dispatch }) {
-			if (getters.canAddPinToCurGuess) {
+			if (!getters.curGuessIsComplete) {
 				console.warn('Current guess is incomplete');
 				return;
 			}

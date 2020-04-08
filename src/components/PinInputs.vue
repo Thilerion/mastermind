@@ -10,6 +10,7 @@
 		<button
 			class="check-btn"
 			@click="checkCurrentGuess"
+			:disabled="!canCheckCurrentGuess"
 		>Check</button>
 	</div>
 </template>
@@ -26,6 +27,9 @@ export default {
 		},
 		pins() {
 			return this.$store.state.config.pins;
+		},
+		canCheckCurrentGuess() {
+			return this.$store.getters.curGuessIsComplete;
 		}
 	},
 	methods: {
@@ -65,5 +69,9 @@ export default {
 	font-weight: bold;
 	color: rgb(61, 48, 28);
 	margin-top: 0.5rem;
+}
+.check-btn:disabled {
+	color: rgba(61, 48, 28, 0.7);
+	background: rgba(255, 255, 255, 0.6);
 }
 </style>
