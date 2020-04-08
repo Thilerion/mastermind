@@ -6,7 +6,7 @@
 			:guess="guessesWithCurrentGuess[idx]"
 			:evaluation="evaluations[idx]"
 			:row="rowNum"
-			:is-current-guess="idx === numGuesses"
+			:is-current-guess="idx === highlightedRow"
 		/>
 	</ul>
 </template>
@@ -30,6 +30,9 @@ export default {
 		},
 		numGuesses() {
 			return this.$store.getters.numGuesses;
+		},
+		highlightedRow() {
+			return this.$store.getters.currentGuessRow;
 		},
 		currentGuess() {
 			return this.$store.state.game.currentGuess;

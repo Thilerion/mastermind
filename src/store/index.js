@@ -10,7 +10,8 @@ const createNewGame = () => ({
 	code: null,
 	guesses: [],
 	evaluations: [],
-	currentGuess: []
+	currentGuess: [],
+	status: 0
 });
 
 const store = new Vuex.Store({
@@ -26,8 +27,12 @@ const store = new Vuex.Store({
 
 	getters: {
 		gameStarted: state => state.game.code != null,
+		gameFinished: state => state.game.status !== 0,
+
 		pinIds: state => Object.values(state.config.pinTypes),
 		numGuesses: state => state.game.guesses.length,
+		currentGuessRow: (state, getters) => getters.gameFinished ? null : getters.numGuesses,
+		guessLimitReached: (state, getters) => getters.numGuesses >= state.config.maxGuesses,
 
 		curGuessEmptySpace: state => {
 			const emptyIdx = state.game.currentGuess.findIndex(val => val == null);
@@ -41,6 +46,14 @@ const store = new Vuex.Store({
 	mutations: {
 		setGameState: (state, data) => state.game = data,
 		setSecretCode: (state, code) => state.game.code = code,
+		setGameStatus: (state, status) => {
+			const gameStates = [-1, 0, 1];
+			if (gameStates.includes(status)) {
+				state.game.status = status;
+			} else {
+				throw new Error('Unrecognized game state.');
+			}
+		},
 		addGuess: (state, guess) => state.game.guesses.push(guess),
 		addGuessEvaluation: (state, evaluation) => state.game.evaluations.push(evaluation),
 		setCurrentGuess: (state, curGuess) => state.game.currentGuess = curGuess,
@@ -98,9 +111,19 @@ const store = new Vuex.Store({
 			dispatch('makeGuess', curGuess);
 			dispatch('evaluateGuess', curGuess);
 		},
-		evaluateGuess({ commit }, guess) {
+		evaluateGuess({ state, getters, commit }, guess) {
 			const { correct, wrongPlacement } = compareCodeToGuess(this.state.game.code, guess);
 			commit('addGuessEvaluation', { black: correct, white: wrongPlacement });
+
+			if (correct === state.config.codeLength) {
+				// game is finished, and won
+				console.log('YOU WIN!');
+				commit('setGameStatus', 1);
+			} else if (getters.guessLimitReached) {
+				// game is finished, and lost
+				console.log('YOU LOSE!');
+				commit('setGameStatus', -1);
+			}
 		}
 	}
 });
