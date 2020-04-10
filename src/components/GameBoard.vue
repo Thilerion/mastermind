@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import BoardRow from './BoardRow';
+import BoardRow from "./BoardRow";
 
 export default {
 	components: {

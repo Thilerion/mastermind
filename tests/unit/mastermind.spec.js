@@ -1,7 +1,7 @@
-import { compareCodeToGuess, createSecretCode } from '../../src/mastermind';
+import { compareCodeToGuess, createSecretCode } from "../../src/mastermind";
 
-describe('compareCodeToGuess', () => {
-	it('returns the correct number of white and black', () => {
+describe("compareCodeToGuess", () => {
+	it("returns the correct number of white and black", () => {
 		const testA = compareCodeToGuess([1, 2, 3, 4], [1, 5, 5, 2]);
 		expect(testA).toEqual({
 			correct: 1,
@@ -15,12 +15,12 @@ describe('compareCodeToGuess', () => {
 		})
 	})
 
-	it('finds a win', () => {
+	it("finds a win", () => {
 		expect(compareCodeToGuess([1, 2, 3, 4], [1, 2, 3, 4])).toEqual({ correct: 4, wrongPlacement: 0 });
 		expect(compareCodeToGuess([0, 0, 0, 0], [0, 0, 0, 0])).toEqual({ correct: 4, wrongPlacement: 0 });
 	})
 
-	it('finds all correct colors but wrong placement', () => {
+	it("finds all correct colors but wrong placement", () => {
 		expect(compareCodeToGuess([1, 2, 5, 5], [5, 5, 1, 2])).toEqual({
 			correct: 0,
 			wrongPlacement: 4
@@ -28,10 +28,10 @@ describe('compareCodeToGuess', () => {
 	})
 })
 
-describe('createSecretCode', () => {
+describe("createSecretCode", () => {
 	const pinTypes = [0, 1, 2, 3, 4, 5];
 	beforeAll(() => {
-		jest.spyOn(Math, 'random').mockReturnValue(0.99);
+		jest.spyOn(Math, "random").mockReturnValue(0.99);
 	})
 	afterAll(() => {
 		jest.restoreAllMocks();
@@ -40,12 +40,12 @@ describe('createSecretCode', () => {
 		jest.clearAllMocks();
 	})
 
-	it('returns a code with the correct length', () => {
+	it("returns a code with the correct length", () => {
 		expect(createSecretCode(pinTypes, 4)).toHaveLength(4);
 		expect(createSecretCode(pinTypes, 6)).toHaveLength(6);
 	})
 
-	it('returns a code with random pins', () => {
+	it("returns a code with random pins", () => {
 		let code = createSecretCode(pinTypes, 4);
 		expect(Math.random).toHaveBeenCalledTimes(4);
 		expect(code).toEqual([5, 5, 5, 5]);

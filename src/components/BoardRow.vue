@@ -3,7 +3,9 @@
 		class="board-row"
 		:class="{current: isCurrentGuess}"
 	>
-		<div class="row-num">{{row}}</div>
+		<div class="row-num">
+			{{ row }}
+		</div>
 		<div class="guess">
 			<div
 				v-for="(_, idx) in codeLength"
@@ -20,9 +22,9 @@
 		</div>
 		<div class="evaluation">
 			<div
-				class="pin-hole"
 				v-for="(evalPin, idx) in evaluationPins"
 				:key="evalPin + '-' + idx"
+				class="pin-hole"
 				:class="{ black: evalPin === 'black', white: evalPin === 'white' }"
 			>
 				<BoardPin
@@ -35,7 +37,7 @@
 </template>
 
 <script>
-import BoardPin from './BoardPin';
+import BoardPin from "./BoardPin";
 
 export default {
 	components: {
@@ -60,7 +62,7 @@ export default {
 	},
 	computed: {
 		hasRemoveClickHandler() {
-			return this.isCurrentGuess ? 'click' : null;
+			return this.isCurrentGuess ? "click" : null;
 		},
 		codeLength() {
 			return this.$store.state.config.codeLength;
@@ -68,7 +70,7 @@ export default {
 		evaluationPins() {
 			const { black = 0, white = 0 } = this.evaluation;
 			const remaining = this.codeLength - white - black;
-			return [...Array(black).fill('black'), ...Array(white).fill('white'), ...Array(remaining).fill(null)];
+			return [...Array(black).fill("black"), ...Array(white).fill("white"), ...Array(remaining).fill(null)];
 		},
 		pins() {
 			return this.$store.state.config.pins;
@@ -76,8 +78,8 @@ export default {
 	},
 	methods: {
 		removePin(idx) {
-			console.log('Remove pin at idx: ', idx);
-			this.$store.dispatch('removePinFromCurrentGuess', idx);
+			console.log("Remove pin at idx: ", idx);
+			this.$store.dispatch("removePinFromCurrentGuess", idx);
 		}
 	}
 }

@@ -10,9 +10,11 @@
 		></button>
 		<button
 			class="check-btn"
-			@click="checkCurrentGuess"
 			:disabled="!canCheckCurrentGuess"
-		>Check</button>
+			@click="checkCurrentGuess"
+		>
+			Check
+		</button>
 	</div>
 </template>
 
@@ -38,10 +40,10 @@ export default {
 	},
 	methods: {
 		addPin(pin) {
-			this.$store.dispatch('addPinToCurrentGuess', { pin, idx: null });
+			this.$store.dispatch("addPinToCurrentGuess", { pin, idx: null });
 		},
 		checkCurrentGuess() {
-			this.$store.dispatch('makeMove');
+			this.$store.dispatch("makeMove");
 		}
 	}
 };

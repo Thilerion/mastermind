@@ -3,14 +3,13 @@
 		<h1>Mastermind</h1>
 		<main class="game">
 			<GameBoard
-				class="board"
 				v-if="gameStarted"
+				class="board"
 			/>
 			<PinInputs
-				class="inputs"
 				v-if="gameStarted"
-			>
-			</PinInputs>
+				class="inputs"
+			/>
 			<CodeMaker
 				v-if="!gameStarted"
 				@start="startGame"
@@ -21,12 +20,12 @@
 </template>
 
 <script>
-import GameBoard from './components/GameBoard';
-import PinInputs from './components/PinInputs';
-import CodeMaker from './components/CodeMaker';
+import GameBoard from "./components/GameBoard";
+import PinInputs from "./components/PinInputs";
+import CodeMaker from "./components/CodeMaker";
 
 export default {
-	name: 'App',
+	name: "App",
 	components: {
 		GameBoard,
 		PinInputs,
@@ -39,13 +38,13 @@ export default {
 	},
 	methods: {
 		startGame(code) {
-			this.$store.commit('setSecretCode', code);
+			this.$store.commit("setSecretCode", code);
 		},
 		resetGame() {
-			this.$store.dispatch('resetGame');
+			this.$store.dispatch("resetGame");
 		},
 		createRandomCode() {
-			this.$store.dispatch('createRandomCode');
+			this.$store.dispatch("createRandomCode");
 		}
 	}
 }

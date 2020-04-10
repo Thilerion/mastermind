@@ -9,27 +9,27 @@ export const PIN_TYPES = {
 
 export const PINS = {
 	[PIN_TYPES.RED]: {
-		color: '#ff0000',
-		name: 'Rood'
+		color: "#ff0000",
+		name: "Rood"
 	},
 	[PIN_TYPES.BLUE]: {
-		color: '#0000FF',
-		name: 'Blauw'
+		color: "#0000FF",
+		name: "Blauw"
 	},
 	[PIN_TYPES.GREEN]: {
-		color: '#00FF00',
-		name: 'Groen'
+		color: "#00FF00",
+		name: "Groen"
 	},
 	[PIN_TYPES.YELLOW]: {
-		color: '#FFFF00',
-		name: 'Geel'
+		color: "#FFFF00",
+		name: "Geel"
 	},
 	[PIN_TYPES.WHITE]: {
-		color: '#FFFFFF',
-		name: 'Wit'
+		color: "#FFFFFF",
+		name: "Wit"
 	},
 	[PIN_TYPES.BLACK]: {
-		color: '#000000',
-		name: 'Zwart'
+		color: "#000000",
+		name: "Zwart"
 	}
 }

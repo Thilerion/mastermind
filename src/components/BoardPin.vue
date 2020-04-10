@@ -4,7 +4,7 @@
 		class="board-pin"
 		:style="{ '--pin-color': color }"
 		@[hasClickEvent]="$emit('click')"
-	></component>
+	/>
 </template>
 
 <script>
@@ -18,10 +18,10 @@ export default {
 	},
 	computed: {
 		componentType() {
-			return this.removable ? 'button' : 'div';
+			return this.removable ? "button" : "div";
 		},
 		hasClickEvent() {
-			return this.removable ? 'click' : null;
+			return this.removable ? "click" : null;
 		}
 	}
 };
