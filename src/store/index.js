@@ -33,7 +33,8 @@ const store = new Vuex.Store({
 
 		pinIds: state => Object.values(state.config.pinTypes),
 		numGuesses: state => state.game.guesses.length,
-		guessLimitReached: (state, getters) => getters.numGuesses >= state.config.maxGuesses,
+		maxTurnsReached: (state, getters) => getters.numGuesses >= state.config.maxGuesses,
+		lastGuessEvaluation: state => state.game.evaluations[state.game.evaluations.length - 1],
 
 		currentGuessRow: (state, getters) => getters.gameFinished ? null : getters.numGuesses,
 		curGuessIsComplete: state => state.currentGuess.length === state.config.codeLength && state.currentGuess.findIndex(val => val === null) === -1,
@@ -70,6 +71,47 @@ const store = new Vuex.Store({
 			const code = createSecretCode(getters.pinIds, state.config.codeLength);
 			dispatch('startGame', code);
 		},
+		makeMove({ state, getters, commit, dispatch }) {
+			// validate current guess
+			if (!getters.curGuessIsComplete) {
+				console.warn("Invalid guess. Can't make move.");
+				return;
+			}
+
+			// evaluate guess
+			const curGuess = [...state.currentGuess];
+			const { correct: black, wrongPlacement: white } = compareCodeToGuess(state.game.code, curGuess);
+			const curEval = { black, white };
+
+			// commit guess and evaluation
+			commit('addGuessEvaluation', curEval);
+			commit('addGuess', curGuess);
+
+			// end turn: check win/loss, reset currentGuess
+			dispatch('endTurn');
+		},
+		endTurn({ state, getters, commit, dispatch }) {
+			// check if game has ended
+			const { black } = getters.lastGuessEvaluation;
+			if (black === state.config.codeLength) {
+				dispatch('endGame', true);
+			} else if (getters.maxTurnsReached) {
+				dispatch('endGame', false);
+			}
+
+			// reset current guess, proceed to next turn
+			commit('resetCurrentGuess');
+		},
+		endGame({ commit }, win) {
+			if (win) {
+				console.log("YOU WIN");
+				commit('setGameStatus', 1);
+			} else {
+				console.log("YOU LOSE");
+				commit('setGameStatus', -1);
+			}
+		},
+
 		addPinToCurrentGuess({ state, getters, commit }, { pin, idx }) {
 			if (getters.blockGameInput) {
 				console.warn("Game not running, can't add pin.");
@@ -95,32 +137,6 @@ const store = new Vuex.Store({
 			curGuess.splice(idx, 1, null);
 			commit('setCurrentGuess', curGuess);
 		},
-		finalizeCurrentGuess({ state, getters, commit, dispatch }) {
-			if (!getters.curGuessIsComplete) {
-				console.warn('Current guess is incomplete');
-				return;
-			}
-			const curGuess = state.currentGuess;
-
-			const { correct: black, wrongPlacement: white } = compareCodeToGuess(state.game.code, curGuess);
-
-			commit('addGuessEvaluation', { black, white });
-			commit('addGuess', [...curGuess]);
-			commit('resetCurrentGuess');
-
-			dispatch('evaluateGameStatus', { black });
-		},
-		evaluateGameStatus({ state, getters, commit }, { black }) {
-			if (black === state.config.codeLength) {
-				// game is finished, and won
-				console.log('YOU WIN!');
-				commit('setGameStatus', 1);
-			} else if (getters.guessLimitReached) {
-				// game is finished, and lost
-				console.log('YOU LOSE!');
-				commit('setGameStatus', -1);
-			}
-		}
 	}
 });
 

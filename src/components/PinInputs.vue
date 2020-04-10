@@ -41,7 +41,7 @@ export default {
 			this.$store.dispatch('addPinToCurrentGuess', { pin, idx: null });
 		},
 		checkCurrentGuess() {
-			this.$store.dispatch('finalizeCurrentGuess');
+			this.$store.dispatch('makeMove');
 		}
 	}
 };
