@@ -35,12 +35,12 @@ export default {
 			return this.$store.getters.currentGuessRow;
 		},
 		currentGuess() {
-			return this.$store.state.game.currentGuess;
+			return this.$store.state.currentGuess;
 		},
 
 		guessesWithCurrentGuess() {
-			const guesses = [...this.guesses];
-			guesses.splice(this.numGuesses, 1, this.currentGuess);
+			const guesses = [...this.guesses, this.currentGuess];
+			// guesses.splice(this.numGuesses, 1, this.currentGuess);
 			return guesses;
 		}
 	}

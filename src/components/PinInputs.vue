@@ -33,8 +33,8 @@ export default {
 		}
 	},
 	methods: {
-		addPin(pinId) {
-			this.$store.dispatch('addPinToCurrentGuess', pinId);
+		addPin(pin) {
+			this.$store.dispatch('addPinToCurrentGuess', { pin, idx: null });
 		},
 		checkCurrentGuess() {
 			this.$store.dispatch('finalizeCurrentGuess');
