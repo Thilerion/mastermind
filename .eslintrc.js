@@ -4,21 +4,36 @@ module.exports = {
 		node: true
 	},
 	extends: [
-		'plugin:vue/essential',
+		'plugin:vue/recommended',
 		'@vue/standard'
 	],
 	parserOptions: {
 		parser: 'babel-eslint'
 	},
 	rules: {
+		// standard eslint rules
 		'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
 		'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-		'no-tabs': 0,
-		indent: [1, 'tab'],
-		semi: 0,
-		'eol-last': 0,
+
+		'comma-dangle': 'off',
+		'eol-last': 'off',
+		'no-returns-assign': 'off',
+		'no-tabs': 'off',
+		semi: 'off',
+
+		indent: ['warn', 'tab'],
 		'space-before-function-paren': ['warn', 'never'],
-		'comma-dangle': 0
+
+		// vue plugin rules
+		'vue/html-indent': ['warn', 'tab'],
+		'vue/html-self-closing': ['warn', {
+			html: {
+				void: 'never',
+				normal: 'any',
+				component: 'always'
+			}
+		}],
+
 	},
 	overrides: [
 		{
