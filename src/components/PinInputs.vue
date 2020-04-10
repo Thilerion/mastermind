@@ -5,6 +5,7 @@
 			:key="pinId"
 			class="pin-input-btn"
 			:style="{ '--pin-color': pins[pinId].color }"
+			:disabled="blockGameInput"
 			@click="addPin(pinId)"
 		></button>
 		<button
@@ -30,6 +31,9 @@ export default {
 		},
 		canCheckCurrentGuess() {
 			return this.$store.getters.curGuessIsComplete;
+		},
+		blockGameInput() {
+			return this.$store.getters.blockGameInput;
 		}
 	},
 	methods: {

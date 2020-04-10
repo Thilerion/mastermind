@@ -29,6 +29,7 @@ const store = new Vuex.Store({
 	getters: {
 		gameStarted: state => state.game.code != null,
 		gameFinished: state => state.game.status !== 0,
+		blockGameInput: (state, getters) => !getters.gameStarted || getters.gameFinished,
 
 		pinIds: state => Object.values(state.config.pinTypes),
 		numGuesses: state => state.game.guesses.length,
@@ -70,11 +71,11 @@ const store = new Vuex.Store({
 			commit('setSecretCode', code);
 			commit('resetCurrentGuess');
 		},
-		makeGuess({ commit }, guess) {
-			commit('addGuess', [...guess]);
-			commit('resetCurrentGuess');
-		},
-		addPinToCurrentGuess({ state, commit }, { pin, idx }) {
+		addPinToCurrentGuess({ state, getters, commit }, { pin, idx }) {
+			if (getters.blockGameInput) {
+				console.warn("Game not running, can't add pin.");
+				return;
+			}
 			const curGuess = [...state.currentGuess];
 			if (idx == null) {
 				// add to first empty spot
@@ -95,20 +96,23 @@ const store = new Vuex.Store({
 			curGuess.splice(idx, 1, null);
 			commit('setCurrentGuess', curGuess);
 		},
-		finalizeCurrentGuess({ state, getters, dispatch }) {
+		finalizeCurrentGuess({ state, getters, commit, dispatch }) {
 			if (!getters.curGuessIsComplete) {
 				console.warn('Current guess is incomplete');
 				return;
 			}
 			const curGuess = state.currentGuess;
-			dispatch('makeGuess', curGuess);
-			dispatch('evaluateGuess', curGuess);
-		},
-		evaluateGuess({ state, getters, commit }, guess) {
-			const { correct, wrongPlacement } = compareCodeToGuess(state.game.code, guess);
-			commit('addGuessEvaluation', { black: correct, white: wrongPlacement });
 
-			if (correct === state.config.codeLength) {
+			const { correct: black, wrongPlacement: white } = compareCodeToGuess(state.game.code, curGuess);
+
+			commit('addGuessEvaluation', { black, white });
+			commit('addGuess', [...curGuess]);
+			commit('resetCurrentGuess');
+
+			dispatch('evaluateGameStatus', { black });
+		},
+		evaluateGameStatus({ state, getters, commit }, { black }) {
+			if (black === state.config.codeLength) {
 				// game is finished, and won
 				console.log('YOU WIN!');
 				commit('setGameStatus', 1);
