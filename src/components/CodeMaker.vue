@@ -9,7 +9,7 @@
 export default {
 	methods: {
 		startGame(code) {
-			this.$store.dispatch('startGameWithCode', code);
+			this.$store.dispatch('startGame', code);
 		},
 		randomCode() {
 			this.$store.dispatch('createRandomCode');

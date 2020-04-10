@@ -58,7 +58,7 @@ const store = new Vuex.Store({
 	},
 
 	actions: {
-		startGameWithCode({ commit }, code) {
+		startGame({ commit }, code) {
 			commit('setSecretCode', [...code]);
 			commit('resetCurrentGuess');
 		},
@@ -66,10 +66,9 @@ const store = new Vuex.Store({
 			const newGameState = createNewGame();
 			commit('setGameState', newGameState);
 		},
-		createRandomCode({ state, getters, commit }) {
+		createRandomCode({ state, getters, dispatch }) {
 			const code = createSecretCode(getters.pinIds, state.config.codeLength);
-			commit('setSecretCode', code);
-			commit('resetCurrentGuess');
+			dispatch('startGame', code);
 		},
 		addPinToCurrentGuess({ state, getters, commit }, { pin, idx }) {
 			if (getters.blockGameInput) {
