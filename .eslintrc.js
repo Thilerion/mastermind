@@ -19,9 +19,9 @@ module.exports = {
 		'eol-last': 'off',
 		'no-returns-assign': 'off',
 		'no-tabs': 'off',
-		semi: 'off',
+		'semi': 'off',
 
-		indent: ['warn', 'tab'],
+		'indent': ['warn', 'tab'],
 		'space-before-function-paren': ['warn', 'never'],
 
 		// vue plugin rules
@@ -33,7 +33,6 @@ module.exports = {
 				component: 'always'
 			}
 		}],
-
 	},
 	overrides: [
 		{

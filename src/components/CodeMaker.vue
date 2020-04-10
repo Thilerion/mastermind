@@ -1,28 +1,23 @@
 <template>
 	<div>
 		<button @click="randomCode">Willekeurige code</button>
-		<CodeInput @finish="startGame" />
 	</div>
 </template>
 
 <script>
-import CodeInput from './CodeInput';
 
 export default {
-	components: {
-		CodeInput
-	},
-	data() {
-		return {
-		}
-	},
 	methods: {
 		startGame(code) {
-			this.$emit('start', [...code]);
+			this.$store.dispatch('startGame', code);
 		},
 		randomCode() {
-			this.$emit('start-random');
+			this.$store.dispatch('createRandomCode');
 		}
+	},
+	beforeMount() {
+		console.warn("Automatically starting with random code...");
+		this.randomCode();
 	}
 }
 </script>
